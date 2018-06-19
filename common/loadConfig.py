@@ -17,7 +17,7 @@ class LoadConfig:
             raise AssertionError("read file err !" + str(e))
         return config['auth']['user'], config['auth']['passwd']
 
-    def get_config_data(self):
+    def get_domain(self):
         # 获取域名
         file_path = os.path.abspath('..\config') + self.f
         config = configparser.ConfigParser()
@@ -46,7 +46,8 @@ class LoadConfig:
         # print(res.cookies)
         return res.cookies
 
-    def get_request_data(self, file, section):
+    @staticmethod
+    def get_request_data(file, section):
         # 获取配置接口参数及请求格式
         # 返回字典res
         file_path = os.path.abspath('..\config') + file
@@ -68,7 +69,8 @@ class LoadConfig:
             raise AssertionError('section not exist !')
             # return 'section not exist !'
 
-    def get_request_paras(self, file, section):
+    @staticmethod
+    def get_request_paras(file, section):
         # 获取配置接口参数
         # 返回字典res
         file_path = os.path.abspath('..\config') + file
