@@ -60,7 +60,7 @@ class DataHandle:
         try:
             data_ori[2] = act
             if act == eval(data_ori[3]):
-                data_ori[4] = 'pass'
+                data_ori[4] = 'success'
             else:
                 data_ori[4] = 'fail'
         except IndexError as e:
