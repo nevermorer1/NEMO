@@ -22,3 +22,4 @@ class MMM(unittest.TestCase):
             actual = 33
             DataHandle.set_data(data_source[i], actual)
         self.dh.write_data(data_source)
+        self.assertTrue(self.dh.check_result(data_source), msg="failed ,refer to result.csv")

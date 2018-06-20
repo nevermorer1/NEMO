@@ -18,17 +18,23 @@ from HTMLTestRunner import HTMLTestRunner
 import unittest
 import sys
 import time
+from dataHandle import DataHandle
 
 sys.path.append('../cases')
 sys.path.append('../common')
 
 test_dir = '../cases'
-discover = unittest.defaultTestLoader.discover(test_dir,pattern='test_*.py')
+discover = unittest.defaultTestLoader.discover(test_dir, pattern='test_*.py')
 
 if __name__ == "__main__":
     now = time.strftime("%Y%m%d%H%M%S")
     filename = '../report/' + now + '_result.html'
     fp = open(filename, 'wb')
+
+    # 新建result文件，并写入标题
+    dh = DataHandle()
+    title = [['id', 'name', 'actual', 'expect', 'result', str(now)]]
+    dh.write_data(title)
     runner = HTMLTestRunner(stream=fp,
                             verbosity=2,
                             title='Test Report',

@@ -12,12 +12,14 @@ class DataHandle:
     def __init__(self, source='data.csv', dirs='../config/'):
         self.data_source = ''.join(['../data/', source])
         self.para_source = ''.join([dirs, source])
-        now = time.strftime("%Y%m%d%H%M%S")
+        now = time.strftime("%Y%m%d")
         self.new_file = ''.join(['../result/', os.path.splitext(source)[0],
                                  '_result_', now, '.csv'])
+        # title = ['id', 'name', 'actual', 'expect', 'result']
+        # self.write_data(title)
 
     @staticmethod
-    def get_list(source, num=None, ):
+    def get_list(source, num=None):
         """
         获取指定行数据
         :param source:
@@ -73,14 +75,19 @@ class DataHandle:
         :param data_list:
         :return:
         """
-        title = ['id', 'name', 'actual', 'expect', 'result']
         try:
-            with open(self.new_file, 'w', newline='') as f:
+            with open(self.new_file, 'a', newline='') as f:
                 csv_writer = csv.writer(f, dialect='excel')
-                csv_writer.writerow(title)
                 csv_writer.writerows(data_list)
         except Exception as e:
             raise AssertionError('result dir not exists !%s' % e)
+
+    @staticmethod
+    def check_result(data_list):
+        for data in data_list:
+            if 'fail' in data:
+                return False
+        return True
 
     @staticmethod
     def combine_data(para_source, data_source):
