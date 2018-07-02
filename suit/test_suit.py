@@ -19,6 +19,8 @@ import unittest
 import sys
 import time
 from dataHandle import DataHandle
+from log import Log
+
 
 sys.path.append('../cases')
 sys.path.append('../common')
@@ -27,6 +29,7 @@ test_dir = '../cases'
 discover = unittest.defaultTestLoader.discover(test_dir, pattern='test_*.py')
 
 if __name__ == "__main__":
+    Log.info('run START')
     now = time.strftime("%Y%m%d%H%M%S")
     filename = '../report/' + now + '_result.html'
     fp = open(filename, 'wb')
@@ -41,3 +44,4 @@ if __name__ == "__main__":
                             description='Implementation Example with: ')
     runner.run(discover)
     fp.close()
+    Log.info('run FINISH')
