@@ -50,11 +50,10 @@ class TestUserLogin(unittest.TestCase):
         Log.info('new test start')
         Log.info('new test end')
 
-    @classmethod
-    def tearDownClass(cls):
-        Log.info('TestUserLogin END')
-
     def tearDown(self):
         Log.debug('---------')
         pass
 
+    @classmethod
+    def tearDownClass(cls):
+        Log.info('TestUserLogin END')
