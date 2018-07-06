@@ -37,7 +37,7 @@ class TestUserLogin(unittest.TestCase):
             req_para['password'] = make_password(req_para['password'])
             Log.info('request data is %s' % req_para)
             actual = random.randint(0, 1)
-            actual = 0
+
             DataHandle.set_data(data_source[i], actual)
         self.dh.write_data(data_source)
         self.assertTrue(self.dh.check_result(data_source), msg="failed ,refer to result.csv")
