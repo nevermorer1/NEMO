@@ -17,7 +17,7 @@ class LoadConfig:
             raise AssertionError("read file err !" + str(e))
         return config['auth']['user'], config['auth']['passwd']
 
-    def get_domain(self):
+    def get_domain_all(self):
         # 获取域名
         file_path = os.path.abspath('..\config') + self.f
         config = configparser.ConfigParser()
@@ -30,7 +30,13 @@ class LoadConfig:
             # return "read file err !"
         # print(config.sections())
         # print(config.items('domain'))
-        return config['domain']['domain']
+        return [config['domain_h']['domain'],config['domain_b']['domain']]
+
+    def get_domain_h(self):
+        return self.get_domain_all()[0]
+
+    def get_domain_b(self):
+        return self.get_domain_all()[1]
 
     def get_cookie_data(self):
         # 后台用户登录，获取后续请求header，cookie

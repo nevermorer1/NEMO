@@ -12,10 +12,12 @@ class Log:
         # 文件输出
         cls.file_handler = logging.FileHandler(r"../report/test.log")
         cls.file_handler.setFormatter(formatter)
+        cls.file_handler.setLevel(level=logging.DEBUG)
         cls.logger.addHandler(cls.file_handler)
         # 控制台输出
         cls.stream_handler = logging.StreamHandler(sys.stdout)
         cls.stream_handler.setFormatter(formatter)
+        cls.stream_handler.setLevel(level=logging.INFO)
         cls.logger.addHandler(cls.stream_handler)
 
     @classmethod

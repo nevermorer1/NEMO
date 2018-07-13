@@ -10,15 +10,16 @@ class MMM(unittest.TestCase):
     def setUpClass(cls):
         Log.info('MMM test start')
         cls.lc = LoadConfig()
-        cls.domain = cls.lc.get_domain()
+        cls.domain = cls.lc.get_domain_h()
         cls.dh = DataHandle()
 
     def setUp(self):
+        Log.debug('========')
         pass
 
     def test_common_method(self):
         """test framework"""
-        url = self.lc.get_domain() + self.dh.get_path(3)
+        url = self.lc.get_domain_h() + self.dh.get_path(3)
         Log.info('request url is %s' % url)
         para_source = self.dh.get_para(3)
         data_source = self.dh.get_data(3)
@@ -31,6 +32,7 @@ class MMM(unittest.TestCase):
         self.assertTrue(self.dh.check_result(data_source), msg="failed ,refer to result.csv")
 
     def tearDown(self):
+        Log.debug('========')
         pass
 
     @classmethod

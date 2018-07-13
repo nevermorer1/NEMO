@@ -30,6 +30,7 @@ discover = unittest.defaultTestLoader.discover(test_dir, pattern='test_*.py')
 
 if __name__ == "__main__":
     Log.info('run START')
+
     now = time.strftime("%Y%m%d%H%M%S")
     filename = '../report/' + now + '_result.html'
     fp = open(filename, 'wb')

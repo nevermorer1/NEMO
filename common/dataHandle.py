@@ -1,6 +1,7 @@
 import csv
 import os
 import time
+import json
 
 
 class DataHandle:
@@ -98,6 +99,7 @@ class DataHandle:
         :return:{}
         """
         p = para_source[3:]
+
         d = data_source[5:]
         co = len(p) - len(d)
         # if co < 0:
@@ -106,6 +108,7 @@ class DataHandle:
             d.append('')
 
         res = dict(zip(p, d))
+        # res = json.dumps(res)
         # try:
         #     for i, j in zip(para_source[3:], data_source[5:]):
         #         res[i] = j
