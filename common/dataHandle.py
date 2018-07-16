@@ -1,7 +1,7 @@
 import csv
 import os
 import time
-import json
+from log import Log
 
 
 class DataHandle:
@@ -60,15 +60,21 @@ class DataHandle:
         :param act:
         :return:
         """
+        # 数据源列索引
+        actual = 2
+        expect = 3
+        result = 4
+
         try:
-            data_ori[2] = act
-            if act == eval(data_ori[3]):
-                data_ori[4] = 'success'
+            data_ori[actual] = act
+            if act == eval(data_ori[expect]):
+                data_ori[result] = 'success'
+                Log.info('test result is success')
             else:
-                data_ori[4] = 'fail'
+                data_ori[result] = 'fail'
+                Log.info('test result is fail')
         except IndexError as e:
             print('error %s' % e)
-        # return data_ori
 
     def write_data(self, data_list):
         """
@@ -79,6 +85,7 @@ class DataHandle:
         try:
             with open(self.new_file, 'a', newline='') as f:
                 csv_writer = csv.writer(f, dialect='excel')
+                Log.info('write result in csv {}'.format(data_list))
                 csv_writer.writerows(data_list)
         except Exception as e:
             raise AssertionError('result dir not exists !%s' % e)
@@ -116,6 +123,7 @@ class DataHandle:
         #     print('error %s' % e)
         #     raise AssertionError('combine_data error !')
         # return res
+        Log.debug('params is {}'.format(res))
         return res
 
     @staticmethod
@@ -126,7 +134,7 @@ class DataHandle:
                                                data_source=data_source))
         return res
 
-    def get_req_para(self,data_id, para_id):
+    def get_req_para(self, data_id, para_id):
 
         pass
 

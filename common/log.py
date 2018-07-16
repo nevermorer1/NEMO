@@ -17,7 +17,7 @@ class Log:
         # 控制台输出
         cls.stream_handler = logging.StreamHandler(sys.stdout)
         cls.stream_handler.setFormatter(formatter)
-        cls.stream_handler.setLevel(level=logging.INFO)
+        cls.stream_handler.setLevel(level=logging.DEBUG)
         cls.logger.addHandler(cls.stream_handler)
 
     @classmethod

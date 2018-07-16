@@ -47,6 +47,14 @@ class Login:
         return res
 
     @staticmethod
+    def login_check(res):
+        """1 成功 0 失败"""
+        if res["result"] == 0 and res["errCode"] is None:
+            return 1
+        else:
+            return 0
+
+    @staticmethod
     def get_cookie():
         res = Login().login(para_id=1, data_id=1)
         return res.cookies

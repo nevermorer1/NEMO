@@ -1,20 +1,20 @@
 from dataHandle import DataHandle
-# from loadConfig import LoadConfig
 import unittest
 from log import Log
 from login import Login
 
 
-class TestUserLogin(unittest.TestCase):
-    """8.2.3.用户登录"""
+class TestUserLoginHk(unittest.TestCase):
+    """8.2.3.用户登录-香港端"""
 
     @classmethod
     def setUpClass(cls):
-        Log.info('TestUserLogin START')
+        Log.info('TestUserLogin START HK 端')
         # cls.lc = LoadConfig()
         # cls.domain = cls.lc.get_domain()
         cls.dh = DataHandle()
-        cls.L = Login()
+        # 香港端
+        cls.L = Login(node=1)
         # cls.url = cls.lc.get_domain() + cls.dh.get_path(1)
 
     def setUp(self):
@@ -28,10 +28,13 @@ class TestUserLogin(unittest.TestCase):
         data_source = self.dh.get_data(data_id)
         res = self.L.login(para_id=para_id, data_id=data_id).json()
         Log.info('login response is {}'.format(res))
-        actual = res["result"]
+        # 登录检查
+        actual = self.L.login_check(res)
+        # 结果写入
         DataHandle.set_data(data_source[0], actual)
         self.dh.write_data(data_source)
-        self.assertEqual(actual, 0, msg='response result is not 0')
+        # 断言结果检查
+        self.assertTrue(self.dh.check_result(data_source), msg='result check fail')
         Log.debug('test_login_success end')
 
     def test_login_wrong_pwd(self):
@@ -41,17 +44,20 @@ class TestUserLogin(unittest.TestCase):
         data_source = self.dh.get_data(data_id)
         res = self.L.login(para_id=para_id, data_id=data_id).json()
         Log.info('login response is {}'.format(res))
-        actual = res["result"]
+        # 登录检查
+        actual = self.L.login_check(res)
+        # 结果写入
         DataHandle.set_data(data_source[0], actual)
         self.dh.write_data(data_source)
-        self.assertNotEqual(actual, 0, msg='response result is 0')
-        Log.debug('test_login_success end')
+        # 断言结果检查
+        self.assertTrue(self.dh.check_result(data_source), msg='result check fail')
+        Log.debug('test_login_wrong_pwd end')
 
     def tearDown(self):
         Log.debug('---------')
         pass
 
-    #
+    # demo
     # def test_user_login(self):
     #     """test_user_login"""
     #     Log.info('request url is %s' % self.url)
@@ -70,4 +76,4 @@ class TestUserLogin(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Log.info('TestUserLogin END')
+        Log.info('TestUserLogin END HK 端')
