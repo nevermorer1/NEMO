@@ -85,7 +85,7 @@ class DataHandle:
         try:
             with open(self.new_file, 'a', newline='') as f:
                 csv_writer = csv.writer(f, dialect='excel')
-                Log.info('write result in csv {}'.format(data_list))
+                Log.info('write data in csv {}'.format(data_list))
                 csv_writer.writerows(data_list)
         except Exception as e:
             raise AssertionError('result dir not exists !%s' % e)

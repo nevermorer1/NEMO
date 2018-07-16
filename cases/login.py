@@ -1,16 +1,11 @@
 from dataHandle import DataHandle
-from loadConfig import LoadConfig
 import json
 import requests
-import hashlib
+from Base import Base
 from log import Log
 
 
-class Login:
-    headers = {'Content-Type': 'application/json;charset=UTF-8', 'Connection': 'keep-alive',
-               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36'}
-    lc = LoadConfig()
-    dh = DataHandle()
+class Login(Base):
 
     def __init__(self, node=1, path_id=1):
         """ @:param node  1: hongkong other:bulisiban
@@ -27,10 +22,6 @@ class Login:
         # cls.url = cls.domain + cls.dh.get_path(path_id)
         # Log.info('login url is %s' % cls.url)
         pass
-
-    @staticmethod
-    def make_password(password):
-        return hashlib.md5(password.encode('utf-8')).hexdigest()
 
     @classmethod
     def get_req_para(cls, para_id, data_id):
