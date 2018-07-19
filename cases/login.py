@@ -1,4 +1,3 @@
-from dataHandle import DataHandle
 import json
 import requests
 from Base import Base
@@ -11,24 +10,14 @@ class Login(Base):
         """ @:param node  1: hongkong other:bulisiban
             @:param p_id  path id
         """
-        self.domain = self.lc.get_domain_h() if node == 1 else self.lc.get_domain_b()
-        self.url = self.domain + self.dh.get_path(path_id)
+        Base.__init__(self, node=node, path_id=path_id)
         Log.info('login url is %s' % self.url)
-
-        # cls.lc = LoadConfig()
-        #
-        # cls.domain = cls.lc.get_domain_h() if node == 1 else cls.lc.get_domain_b()
-        # cls.dh = DataHandle()
-        # cls.url = cls.domain + cls.dh.get_path(path_id)
-        # Log.info('login url is %s' % cls.url)
         pass
 
     @classmethod
     def get_req_para(cls, para_id, data_id):
-        para_source = cls.dh.get_para(para_id)
-        cls.data_source = cls.dh.get_data(data_id)[0]
-        req_para = DataHandle.combine_data(para_source, cls.data_source)
-        req_para['password'] = cls.make_password(req_para['password'])
+        req_para = Base.get_req_para(para_id, data_id)
+        req_para['password'] = Base.make_password(req_para['password'])
         return req_para
 
     def login(self, para_id, data_id):
@@ -48,10 +37,16 @@ class Login(Base):
     @staticmethod
     def get_cookie():
         res = Login().login(para_id=1, data_id=1)
-        return res.cookies
+        # return res.cookies
+        # cookies = requests.utils.add_dict_to_cookiejar(cj=res.cookies,
+        #                                                cookie_dict={"userInfo": res.json()['data']})
+        cookies=res.cookies
+        return cookies
 
 
 if __name__ == "__main__":
-
-    print(Login.get_cookie())
+    url='http://47.97.210.166/hkPro//history/queryUpdateFlag'
+    data = {"pageNo":1,"pageSize":10,"taskId":777}
+    print(requests.post(url=url,headers=Base.headers,data=json.dumps(data),
+                        cookies=Login.get_cookie()).json())
     pass
