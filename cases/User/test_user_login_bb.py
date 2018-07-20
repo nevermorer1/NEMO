@@ -24,25 +24,18 @@ class TestUserLoginBB(unittest.TestCase):
     def test_login_success(self):
         """用户登录成功"""
         data_id = 3
-        para_id = 1
-        data_source = self.dh.get_data(data_id)
-        res = self.L.login(para_id=para_id, data_id=data_id).json()
-        Log.info('login response is {}'.format(res))
-        # 登录检查
-        actual = self.L.login_check(res)
-        # 结果结果写入
-        DataHandle.set_data(data_source[0], actual)
-        self.dh.write_data(data_source)
-        # 断言结果检查
-        self.assertTrue(self.dh.check_result(data_source), msg='result check fail')
+        self.login_base(data_id=data_id)
         Log.debug('test_login_success end')
 
     def test_login_wrong_pwd(self):
         """密码错误登录失败"""
         data_id = 4
-        para_id = 1
+        self.login_base(data_id=data_id)
+        Log.debug('test_login_wrong_pwd end')
+
+    def login_base(self, data_id):
         data_source = self.dh.get_data(data_id)
-        res = self.L.login(para_id=para_id, data_id=data_id).json()
+        res = self.L.login(data_id=data_id).json()
         Log.info('login response is {}'.format(res))
         # 登录检查
         actual = self.L.login_check(res)
@@ -51,7 +44,6 @@ class TestUserLoginBB(unittest.TestCase):
         self.dh.write_data(data_source)
         # 断言结果检查
         self.assertTrue(self.dh.check_result(data_source), msg='result check fail')
-        Log.debug('test_login_wrong_pwd end')
 
     def tearDown(self):
         Log.debug('---------')

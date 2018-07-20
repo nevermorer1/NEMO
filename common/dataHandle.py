@@ -72,7 +72,7 @@ class DataHandle:
                 Log.info('test result is success')
             else:
                 data_ori[result] = 'fail'
-                Log.info('test result is fail')
+                Log.error('test result is fail')
         except IndexError as e:
             print('error %s' % e)
 
