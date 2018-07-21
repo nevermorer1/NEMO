@@ -13,7 +13,7 @@ class Login(Base):
 
         self.path_id = path_id
         Base.__init__(self, node=node, path_id=path_id)
-        Log.info('login url is %s' % self.url)
+        # Log.info('login url is %s' % self.url)
         pass
 
     @classmethod
@@ -25,6 +25,7 @@ class Login(Base):
     def login(self, data_id):
         req_para = self.get_req_para(para_id=self.path_id, data_id=data_id)
         Log.info('request data is %s' % req_para)
+        Log.info('login url is %s' % self.url)
         res = requests.post(url=self.url, data=json.dumps(req_para), headers=self.headers)
         return res
 
