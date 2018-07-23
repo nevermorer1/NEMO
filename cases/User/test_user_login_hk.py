@@ -23,13 +23,13 @@ class TestUserLoginHk(unittest.TestCase):
 
     def test_login_success(self):
         """用户登录成功"""
-        data_id = 1
+        data_id = 1001
         self.login_base(data_id=data_id)
         Log.debug('test_login_success end')
 
     def test_login_wrong_pwd(self):
         """密码错误登录失败"""
-        data_id = 2
+        data_id = 1002
         self.login_base(data_id=data_id)
         Log.debug('test_login_wrong_pwd end')
 

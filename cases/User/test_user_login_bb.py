@@ -23,13 +23,13 @@ class TestUserLoginBB(unittest.TestCase):
 
     def test_login_success(self):
         """用户登录成功"""
-        data_id = 3
+        data_id = 1003
         self.login_base(data_id=data_id)
         Log.debug('test_login_success end')
 
     def test_login_wrong_pwd(self):
         """密码错误登录失败"""
-        data_id = 4
+        data_id = 1004
         self.login_base(data_id=data_id)
         Log.debug('test_login_wrong_pwd end')
 

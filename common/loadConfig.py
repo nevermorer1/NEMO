@@ -30,7 +30,7 @@ class LoadConfig:
             # return "read file err !"
         # print(config.sections())
         # print(config.items('domain'))
-        return [config['domain_h']['domain'],config['domain_b']['domain']]
+        return [config['domain_h']['domain'], config['domain_b']['domain']]
 
     def get_domain_h(self):
         return self.get_domain_all()[0]
@@ -96,6 +96,24 @@ class LoadConfig:
         else:
             raise AssertionError('section not exist !')
 
+    def get_db_conf(self, section):
+        file_path = os.path.abspath('..\config') + self.f
+        config = configparser.ConfigParser()
+        try:
+            config.read(file_path, encoding='utf-8')
+            # print(config.sections())
+        except Exception as e:
+            # print(e)
+            # return "read file err !"
+            raise AssertionError("read file err !" + str(e))
+        res = {}
+        res['host']=config.get(section, "host")
+        res["port"]=config.get(section, "port")
+        res['user'] = config.get(section, 'user')
+        res['password'] = config.get(section, 'password')
+        res['database'] = config.get(section, 'database')
+        return res
+
 
 if __name__ == '__main__':
     #     print(os.path.abspath('..'))
@@ -112,11 +130,5 @@ if __name__ == '__main__':
     #     print(type(res))
     #     print(type(res['data']))
     cfg = LoadConfig()
-    print(cfg.auth)
-    print(cfg.get_config_data())
-    # print(cfg.get_cookie_data())
-    # for i in range(len(s)):
-    #     # print(type(cfg.get_request_paras(f, s1)))
-    #     print(cfg.get_request_paras(f, s[i]))
-
-
+    section = "sql_b"
+    cfg.get_db_conf(section)

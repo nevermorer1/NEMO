@@ -21,9 +21,10 @@ class Base:
         pass
 
     @staticmethod
-    def res_check(res):
+    def check(res):
         """1 成功 0 失败"""
-        if res["result"] == 0 and res["errCode"] is None:
+        code = '00000'
+        if res["code"] == code:
             return 1
         else:
             return 0

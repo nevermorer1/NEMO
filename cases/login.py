@@ -24,21 +24,28 @@ class Login(Base):
 
     def login(self, data_id):
         req_para = self.get_req_para(para_id=self.path_id, data_id=data_id)
-        Log.info('request data is %s' % req_para)
+        Log.info('login data is %s' % req_para)
         Log.info('login url is %s' % self.url)
         res = requests.post(url=self.url, data=json.dumps(req_para), headers=self.headers)
+        return res
+
+    def login_sp(self,data):
+        data['password'] = Base.make_password(data['password'])
+        Log.info('login data is %s' % data)
+        Log.info('login url is %s' % self.url)
+        res = requests.post(url=self.url, data=json.dumps(data), headers=self.headers)
         return res
 
     @staticmethod
     def login_check(res):
         """1 成功 0 失败"""
-        errcode = '00000'
-        if res["result"] == 0 and res["errCode"] == errcode:
+        code = '00000'
+        if res["code"] == code:
             return 1
         else:
             return 0
 
-    def get_cookie(self, data_id=1):
+    def get_cookie(self, data_id=1001):
         res = self.login(data_id=data_id)
         # return res.cookies
         # cookies = requests.utils.add_dict_to_cookiejar(cj=res.cookies,
