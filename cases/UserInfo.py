@@ -37,7 +37,7 @@ class UserInfo(Base):
         Log.info('insert user response data is {}'.format(res.json()))
         return res
 
-    def login_modify(self,para_id, data_id,node=1,):
+    def login_modify(self, para_id, data_id, node=1):
         auto_id = 3001
         L = Login(node=node)
         cookies_a = L.get_cookie(data_id=auto_id)
@@ -51,25 +51,27 @@ class UserInfo(Base):
         req_para['newPassword'] = Base.make_password(req_para['newPassword'])
         Log.info('modify_password data is {}'.format(req_para))
         # 请求
-        res = requests.post(url=url_reset, headers=Base.headers, cookies=cookies,
+        res = requests.post(url=url_reset, headers=Base.headers, cookies=cookies_a,
                             data=json.dumps(req_para))
 
         return res
-        pass
 
-    def modify_password(self,para_id, data_id,node=1):
+    def modify_password(self, para_id, data_id, node=1):
         """修改用户密码"""
         sql_select = 'SELECT password FROM t_user WHERE loginName = \'Automation\''
         sql_update = 'UPDATE t_user SET `password`=bf WHERE loginName=\'Automation\''
-        bf='1c18dc8afa0363def9fe4977dfff2f73'   #123456入库
-        af='37b1a09078cf51963f48b478ab6efdf9'   #111111入库
+        bf = '1c18dc8afa0363def9fe4977dfff2f73'  # 123456入库
+        af = '37b1a09078cf51963f48b478ab6efdf9'  # 111111入库
 
         if bf == self.s.select(sql_select):
-            self.login_modify(para_id, data_id,node)
-        else:
-            self.s.updata(sql)
             self.login_modify(para_id, data_id, node)
-        pass
+        else:
+            self.s.updata(sql_update)
+            self.login_modify(para_id, data_id, node)
+
+        if af == self.s.select(sql_select):
+            return 1
+        return 0
 
     def reset_password(self, para_id, data_id, cookies):
         """重置密码"""
@@ -86,6 +88,18 @@ class UserInfo(Base):
         res = requests.post(url=url_reset, headers=Base.headers, cookies=cookies,
                             data=json.dumps(req_para))
         return res
+
+    @staticmethod
+    def check(res):
+        """1 成功 0 失败"""
+        code = '00000'
+        msg = "成功"
+        if res["code"] == code and res["message"] == msg:
+            Log.debug('actual res check is 1')
+            return 1
+        else:
+            Log.debug('actual res check is 0')
+            return 0
 
 
 if __name__ == '__main__':

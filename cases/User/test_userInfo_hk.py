@@ -8,18 +8,18 @@ import json
 from Base import Base
 
 
-class TestUserInfoBB(unittest.TestCase):
-    """用户相关-BB端"""
+class TestUserInfoHK(unittest.TestCase):
+    """用户相关-HK端"""
 
     bf = '1c18dc8afa0363def9fe4977dfff2f73'  # 123456入库
     af = '37b1a09078cf51963f48b478ab6efdf9'  # 111111入库
 
     @classmethod
     def setUpClass(cls):
-        Log.info('TestUserInfoBB START BB端')
+        Log.info('TestUserInfoHK START HK端')
         # cls.lc = LoadConfig()
         # cls.domain = cls.lc.get_domain()
-        cls.node = 2
+        cls.node = 1
         cls.dh = DataHandle()
         # 布里端
         cls.L = Login(node=cls.node)
@@ -32,22 +32,22 @@ class TestUserInfoBB(unittest.TestCase):
         pass
 
     def test_insert_user_success(self):
-        """BB端新增本端用户成功"""
-        data_id = 9005
+        """HK端新增本端用户成功"""
+        data_id = 9001
         para_id = 9
         self.base_insert_user(para_id=para_id, data_id=data_id, cookies=self.cookies)
         Log.debug('test_insert_user_success end')
 
     def test_insert_user_fail(self):
-        """BB端新增对端用户失败"""
-        data_id = 9004
+        """HK端新增对端用户失败"""
+        data_id = 9002
         para_id = 9
         self.base_insert_user(para_id=para_id, data_id=data_id, cookies=self.cookies)
         Log.debug('test_insert_user_fail end')
 
     def test_insert_user_no_session(self):
-        """BB端非登录态新增用户"""
-        data_id = 9006
+        """HK端非登录态新增用户"""
+        data_id = 9003
         para_id = 9
         self.base_insert_user(para_id=para_id, data_id=data_id, cookies=None)
         Log.debug('test_insert_user_no_session end')
@@ -87,4 +87,4 @@ class TestUserInfoBB(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Log.info('TestUserInfoBB END BB端')
+        Log.info('TestUserInfoHK END HK端')

@@ -3,7 +3,7 @@ from loadConfig import LoadConfig
 import time
 # import requests
 import hashlib
-# from log import Log
+from log import Log
 
 
 class Base:
@@ -12,7 +12,7 @@ class Base:
     lc = LoadConfig()
     dh = DataHandle()
 
-    def __init__(self, node=1, path_id=1):
+    def __init__(self, node, path_id):
         """ @:param node  1: hongkong other:bulisiban
             @:param p_id  path id
         """
@@ -25,8 +25,10 @@ class Base:
         """1 成功 0 失败"""
         code = '00000'
         if res["code"] == code:
+            Log.debug('actual res check is 1')
             return 1
         else:
+            Log.debug('actual res check is 0')
             return 0
 
     @classmethod
