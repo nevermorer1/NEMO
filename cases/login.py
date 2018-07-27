@@ -27,6 +27,7 @@ class Login(Base):
         Log.info('login data is %s' % req_para)
         Log.info('login url is %s' % self.url)
         res = requests.post(url=self.url, data=json.dumps(req_para), headers=self.headers)
+        Log.info("login response is {}".format(res.json()))
         return res
 
     def login_sp(self,data):

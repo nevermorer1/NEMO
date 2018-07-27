@@ -1,5 +1,6 @@
 import pymysql
 from loadConfig import LoadConfig
+from log import Log
 
 
 class sql:
@@ -9,6 +10,9 @@ class sql:
         self.section = 'sql_h' if node == 1 else 'sql_b'
         self.conf = self.lc.get_db_conf(section=self.section)
         pass
+
+    def select_single(self, sql):
+        return self.select(sql=sql)[0][0]
 
     def select(self, sql):
         conn = pymysql.connect(
@@ -25,7 +29,7 @@ class sql:
         conn.close()
         return result
 
-    def updata(self,sql):
+    def updata(self, sql):
         conn = pymysql.connect(
             host=self.conf.get('host'),
             port=int(self.conf.get('port')),
@@ -40,6 +44,7 @@ class sql:
         except:
             # 发生错误回滚
             conn.rollback()
+            Log.error("updata fail ! {}".format(sql))
         cur.close()
         conn.close()
 
