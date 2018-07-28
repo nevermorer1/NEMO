@@ -1,9 +1,9 @@
-from dataHandle import DataHandle
-from loadConfig import LoadConfig
+from common.dataHandle import DataHandle
+from common.loadConfig import LoadConfig
 import time
 # import requests
 import hashlib
-from log import Log
+from common.log import Log
 
 
 class Base:
