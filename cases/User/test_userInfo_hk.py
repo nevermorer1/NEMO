@@ -1,8 +1,8 @@
-from dataHandle import DataHandle
+from common.dataHandle import DataHandle
 import unittest
-from log import Log
-from login import Login
-from userinfo import UserInfo
+from common.log import Log
+from cases.login import Login
+from cases.userinfo import UserInfo
 
 
 class TestUserInfoHK(unittest.TestCase):
@@ -41,7 +41,7 @@ class TestUserInfoHK(unittest.TestCase):
         data_id = 9002
         para_id = 9
         res = self.ui.base_insert_user(para_id=para_id, data_id=data_id,
-                                         cookies=self.admin_cookies)
+                                       cookies=self.admin_cookies)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_insert_user_fail end')
 

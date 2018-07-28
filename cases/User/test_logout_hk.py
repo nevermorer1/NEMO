@@ -1,6 +1,6 @@
-from dataHandle import DataHandle
-from log import Log
-from logout import Logout
+from common.dataHandle import DataHandle
+from common.log import Log
+from cases.logout import Logout
 import unittest
 
 

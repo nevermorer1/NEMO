@@ -1,10 +1,10 @@
-from Base import Base
-from login import Login
-from log import Log
+from common.Base import Base
+from cases.login import Login
+from common.log import Log
 import requests
 import json
-from sql import sql
-from dataHandle import DataHandle
+from common.sql import sql
+from common.dataHandle import DataHandle
 
 
 class UserInfo(Base):

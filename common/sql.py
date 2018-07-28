@@ -1,6 +1,6 @@
 import pymysql
-from loadConfig import LoadConfig
-from log import Log
+from common.loadConfig import LoadConfig
+from common.log import Log
 
 
 class sql:

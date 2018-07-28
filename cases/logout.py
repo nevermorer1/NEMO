@@ -1,8 +1,8 @@
 import json
 import requests
-from Base import Base
-from log import Log
-from dataHandle import DataHandle
+from common.Base import Base
+from common.log import Log
+from common.dataHandle import DataHandle
 
 
 class Logout(Base):

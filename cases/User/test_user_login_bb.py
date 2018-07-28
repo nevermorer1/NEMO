@@ -1,7 +1,7 @@
-from dataHandle import DataHandle
+from common.dataHandle import DataHandle
 import unittest
-from log import Log
-from login import Login
+from common.log import Log
+from cases.login import Login
 
 
 class TestUserLoginBB(unittest.TestCase):

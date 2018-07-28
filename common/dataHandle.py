@@ -1,7 +1,7 @@
 import csv
 import os
 import time
-from log import Log
+from common.log import Log
 
 
 class DataHandle:

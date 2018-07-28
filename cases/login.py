@@ -1,7 +1,7 @@
 import json
 import requests
-from Base import Base
-from log import Log
+from common.Base import Base
+from common.log import Log
 
 
 class Login(Base):
