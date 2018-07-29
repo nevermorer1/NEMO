@@ -31,6 +31,7 @@ class UserInfo(Base):
         sql = 'SELECT id FROM t_user WHERE loginName = \'Automation\''
         # 设置 userid
         req_para['userId'] = self.s.select_single(sql)
+        data_source[0][5] = req_para['userId']
         Log.info('reset_password data is {}'.format(req_para))
         # 请求前数据库检查
         self.before_reset()
@@ -84,6 +85,7 @@ class UserInfo(Base):
         data_source = self.dh.get_data(data_id)
         req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
         req_para['userId'] = self.get_user_id()
+        data_source[0][5] = req_para['userId']
         req_para['password'] = Base.make_password(req_para['password'])
         req_para['newPassword'] = Base.make_password(req_para['newPassword'])
         Log.info('modify_password data is {}'.format(req_para))
@@ -95,6 +97,53 @@ class UserInfo(Base):
         Log.info('modify_password response data is {}'.format(res))
         # 结果检查
         actual = self.modify_check(res)
+        # 结果写入
+        DataHandle.set_data(data_source[0], actual)
+        self.dh.write_data(data_source)
+        # 结果检查
+        return self.dh.check_result(data_source)
+
+    def base_get_list_by_condition(self, para_id, data_id, cookies):
+        """获取用户列表"""
+        # 获取请求url
+        url_get_list_by_condition = self.domain + Base.dh.get_path(para_id)
+        Log.info('get_list_by_condition request url : {}'.format(url_get_list_by_condition))
+        # 获取请求数据
+        data_source = self.dh.get_data(data_id)
+        req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
+        Log.info('get_list_by_condition request data is {}'.format(req_para))
+        # 请求
+        res = requests.post(url=url_get_list_by_condition, headers=Base.headers, cookies=cookies,
+                            data=json.dumps(req_para)).json()
+        Log.info('get_list_by_condition response data is {}'.format(res))
+        # 结果检查
+        actual = self.check(res)
+        # 结果写入
+        DataHandle.set_data(data_source[0], actual)
+        self.dh.write_data(data_source)
+        # 结果检查
+        return self.dh.check_result(data_source)
+
+    def base_get_user_by_id(self, para_id, data_id, cookies):
+        """查询用户详情"""
+        # 获取请求url
+        url_get_user_by_id = self.domain + Base.dh.get_path(para_id)
+        Log.info('get_user_by_id request url : {}'.format(url_get_user_by_id))
+
+        # 获取请求数据
+        data_source = self.dh.get_data(data_id)
+        req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
+        sql = 'SELECT id FROM t_user WHERE loginName = \'Automation\''
+        # 设置 userid
+        req_para['userId'] = self.s.select_single(sql)
+        data_source[0][5] = req_para['userId']
+        Log.info('get_user_by_id request data : {}'.format(req_para))
+        # 请求
+        res = requests.post(url=url_get_user_by_id, headers=Base.headers, cookies=cookies,
+                            data=json.dumps(req_para)).json()
+        Log.info('get_user_by_id response data is {}'.format(res))
+        # 结果检查
+        actual = self.check(res)
         # 结果写入
         DataHandle.set_data(data_source[0], actual)
         self.dh.write_data(data_source)
@@ -122,7 +171,7 @@ class UserInfo(Base):
         msg = "成功"
 
         if res["code"] == code and res["message"] == msg and \
-                self.bf == self.s.select_single(sql_select):
+                        self.bf == self.s.select_single(sql_select):
             Log.debug('actual res check is 1')
             return 1
         else:
@@ -150,7 +199,7 @@ class UserInfo(Base):
         msg = "成功"
 
         if res["code"] == code and res["message"] == msg and \
-                self.af == self.s.select_single(sql_select):
+                        self.af == self.s.select_single(sql_select):
             Log.debug('actual res check is 1')
             return 1
         else:
