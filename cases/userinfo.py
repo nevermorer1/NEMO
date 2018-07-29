@@ -170,8 +170,8 @@ class UserInfo(Base):
         code = '00000'
         msg = "成功"
 
-        if res["code"] == code and res["message"] == msg and \
-                        self.bf == self.s.select_single(sql_select):
+        if res["code"] == code and res["message"] == msg \
+                and self.bf == self.s.select_single(sql_select):
             Log.debug('actual res check is 1')
             return 1
         else:
@@ -198,8 +198,8 @@ class UserInfo(Base):
         code = '00000'
         msg = "成功"
 
-        if res["code"] == code and res["message"] == msg and \
-                        self.af == self.s.select_single(sql_select):
+        if res["code"] == code and res["message"] == msg \
+                and self.af == self.s.select_single(sql_select):
             Log.debug('actual res check is 1')
             return 1
         else:
