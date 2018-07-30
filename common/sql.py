@@ -29,6 +29,31 @@ class sql:
         conn.close()
         return result
 
+    def select_dic(self, sql):
+        """返回字典"""
+        conn = pymysql.connect(
+            host=self.conf.get('host'),
+            port=int(self.conf.get('port')),
+            user=self.conf.get('user'),
+            password=self.conf.get('password'),
+            database=self.conf.get('database'),
+            cursorclass=pymysql.cursors.DictCursor
+        )
+        cur = conn.cursor()
+        try:
+            cur.execute(sql)
+            result = cur.fetchall()
+            return result
+        except:
+            Log.error('select_dic error !')
+        finally:
+            cur.close()
+            conn.close()
+
+    def select_dic_single(self, sql):
+        res = self.select_dic(sql=sql)[0]
+        return res
+
     def updata(self, sql):
         conn = pymysql.connect(
             host=self.conf.get('host'),
@@ -51,6 +76,6 @@ class sql:
 
 if __name__ == '__main__':
     s = sql()
-    sq = 'SELECT id FROM t_user WHERE loginName = \'Automation\''
-    s.select(sq)
+    sql_select_update = 'SELECT * FROM t_user WHERE loginName = \'update\''
+    s.select_dic_single(sql_select_update)
     pass

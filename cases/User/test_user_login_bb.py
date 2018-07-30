@@ -5,7 +5,7 @@ from cases.login import Login
 
 
 class TestUserLoginBB(unittest.TestCase):
-    """8.2.3.用户登录-BB端"""
+    """用户登录-BB端"""
 
     @classmethod
     def setUpClass(cls):

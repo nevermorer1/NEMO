@@ -5,7 +5,7 @@ from cases.login import Login
 
 
 class TestUserLoginHk(unittest.TestCase):
-    """8.2.3.用户登录-香港端"""
+    """用户登录-香港端"""
 
     @classmethod
     def setUpClass(cls):

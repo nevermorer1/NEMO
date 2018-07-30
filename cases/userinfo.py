@@ -10,11 +10,16 @@ from common.dataHandle import DataHandle
 class UserInfo(Base):
     bf = '1c18dc8afa0363def9fe4977dfff2f73'  # 123456入库
     af = '37b1a09078cf51963f48b478ab6efdf9'  # 111111入库
+    user_status = [0, 1]
+    user_group = [1, 2]
+
+    sql_select_update = 'SELECT * FROM t_user WHERE loginName = \'update\''
 
     def __init__(self, node=1, path_id=1):
         """ @:param node  1: hongkong other:bulisiban
             @:param p_id  path id
         """
+        self.node = node
         # self.cookies = Login(node=node, path_id=1).get_cookie()
         self.s = sql(node=node)
         Base.__init__(self, node=node, path_id=path_id)
@@ -149,6 +154,92 @@ class UserInfo(Base):
         self.dh.write_data(data_source)
         # 结果检查
         return self.dh.check_result(data_source)
+
+    def base_query_in_status(self, para_id, data_id, cookies):
+        """本地查询用户在线状态"""
+        # 获取请求url
+        url_get_user_by_id = self.domain + Base.dh.get_path(para_id)
+        Log.info('query_in_status request url : {}'.format(url_get_user_by_id))
+
+        # 获取请求数据
+        data_source = self.dh.get_data(data_id)
+        req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
+        # 请求
+        res = requests.post(url=url_get_user_by_id, headers=Base.headers, cookies=cookies,
+                            data=json.dumps(req_para)).json()
+        Log.info('query_in_status response data is {}'.format(res))
+        # 结果检查
+        actual = self.check(res)
+        # 结果写入
+        DataHandle.set_data(data_source[0], actual)
+        self.dh.write_data(data_source)
+        # 结果检查
+        return self.dh.check_result(data_source)
+
+    def base_update_user(self, para_id, data_id, cookies):
+        """修改用户公共方法"""
+        # 获取请求url
+        url_update = self.domain + Base.dh.get_path(para_id)
+        Log.info('update user request url : {}'.format(url_update))
+        # 获取请求数据
+        data_source = self.dh.get_data(data_id)
+        req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
+        # 随机生成用户名
+        req_para['userId'] = self.s.select_dic_single(self.sql_select_update)['id']
+        data_source[0][5] = req_para['userId']
+        # 接口数据类型转换
+        req_para['group'] = eval(req_para['group'])
+        req_para['status'] = eval(req_para['status'])
+        Log.info('update user request data is {}'.format(json.dumps(req_para)))
+        # 检查数据库
+        self.before_update()
+        # 请求接口
+        res = requests.post(url=url_update, headers=Base.headers, cookies=cookies,
+                            data=json.dumps(req_para)).json()
+        Log.info('update user response data is {}'.format(res))
+        # 结果检查
+        actual = self.after_update_check(res=res, status=req_para['status'])
+        # 结果写入
+        DataHandle.set_data(data_source[0], actual)
+        self.dh.write_data(data_source)
+        # 结果检查
+        return self.dh.check_result(data_source)
+
+    def before_update(self):
+        """重置用户密码前数据验证"""
+        before_state = self.s.select_dic_single(self.sql_select_update)
+        Log.info("修改用户信息前用户状态:name={}，status={}"
+                 .format(before_state['name'], before_state['status']))
+        pass
+
+    def after_update_check(self, res, status):
+        """ 修改用户信息结果验证，检查请求返回值和数据库
+         1 成功 0 失败"""
+        code = '00000'
+        msg = "成功"
+        data = self.s.select_dic_single(self.sql_select_update)
+        Log.info("修改用户信息后用户状态:name={}，status={}"
+                 .format(data['name'], data['status']))
+        # 检查数据库group
+        if data['group'] != self.node:
+            Log.error('group error ! only {} allowed,it\'s {}'
+                      .format(self.node, data['group']))
+            return 0
+        if status in self.user_status:
+            if res["code"] == code and res["message"] == msg \
+                    and status == data['status']:
+                Log.debug('status valid,actual res check is 1')
+                return 1
+            else:
+                Log.debug('status valid,actual res check is 0')
+                return 0
+
+        elif res["code"] == code and res["message"] == msg:
+            Log.debug('status invalid,actual res check is 1')
+            return 1
+        else:
+            Log.debug('status invalid,actual res check is 0')
+            return 0
 
     def before_reset(self):
         """重置用户密码前数据验证"""

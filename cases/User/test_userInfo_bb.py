@@ -103,6 +103,54 @@ class TestUserInfoBB(unittest.TestCase):
                                           cookies=self.modify_cookie)
         self.assertTrue(res, msg='result check fail')
 
+    def test_get_list_by_condition_success(self):
+        """BB admin  查询用户列表成功"""
+        para_id = 6
+        data_id = 6004
+        res = self.ui.base_get_list_by_condition(para_id=para_id, data_id=data_id,
+                                                 cookies=self.admin_cookies)
+        self.assertTrue(res, msg='result check fail')
+
+    def test_get_list_by_condition_no_admin_fail(self):
+        """BB 非admin  查询用户列表失败"""
+        para_id = 6
+        data_id = 6005
+        res = self.ui.base_get_list_by_condition(para_id=para_id, data_id=data_id,
+                                                 cookies=self.modify_cookie)
+        self.assertTrue(res, msg='result check fail')
+
+    def test_get_list_by_condition_no_session_fail(self):
+        """BB 未登录  查询用户列表失败"""
+        para_id = 6
+        data_id = 6006
+        res = self.ui.base_get_list_by_condition(para_id=para_id, data_id=data_id,
+                                                 cookies=None)
+        self.assertTrue(res, msg='result check fail')
+
+    def test_get_user_by_id_success(self):
+        """BB admin  查询用户详情成功"""
+        para_id = 8
+        data_id = 8004
+        res = self.ui.base_get_user_by_id(para_id=para_id, data_id=data_id,
+                                          cookies=self.admin_cookies)
+        self.assertTrue(res, msg='result check fail')
+
+    def test_get_user_by_id_no_admin_fail(self):
+        """BB 非admin  查询用户详情失败"""
+        para_id = 8
+        data_id = 8005
+        res = self.ui.base_get_user_by_id(para_id=para_id, data_id=data_id,
+                                          cookies=self.modify_cookie)
+        self.assertTrue(res, msg='result check fail')
+
+    def test_get_user_by_id_no_session_fail(self):
+        """BB 未登录  查询用户详情失败"""
+        para_id = 8
+        data_id = 8006
+        res = self.ui.base_get_user_by_id(para_id=para_id, data_id=data_id,
+                                          cookies=None)
+        self.assertTrue(res, msg='result check fail')
+
     def tearDown(self):
         Log.debug('---------')
         pass

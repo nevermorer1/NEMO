@@ -29,6 +29,7 @@ test_dir = '../cases'
 discover = unittest.defaultTestLoader.discover(test_dir, pattern='test_*.py')
 
 if __name__ == "__main__":
+    Log.info('*'*100)
     Log.info('run START')
 
     now = time.strftime("%Y%m%d%H%M%S")
@@ -46,3 +47,4 @@ if __name__ == "__main__":
     runner.run(discover)
     fp.close()
     Log.info('run FINISH')
+    Log.info('*'*100)
