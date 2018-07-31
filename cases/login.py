@@ -10,7 +10,7 @@ class Login(Base):
         """ @:param node  1: hongkong other:bulisiban
             @:param p_id  path id
         """
-
+        # self.headers = {'Content-Type': 'application/json;charset=UTF-8'}
         self.path_id = path_id
         Base.__init__(self, node=node, path_id=path_id)
         # Log.info('login url is %s' % self.url)
@@ -24,13 +24,13 @@ class Login(Base):
 
     def login(self, data_id):
         req_para = self.get_req_para(para_id=self.path_id, data_id=data_id)
-        Log.info('login data is %s' % req_para)
+        Log.info('login data is %s' % json.dumps(req_para))
         Log.info('login url is %s' % self.url)
         res = requests.post(url=self.url, data=json.dumps(req_para), headers=self.headers)
         Log.info("login response is {}".format(res.json()))
         return res
 
-    def login_sp(self,data):
+    def login_sp(self, data):
         data['password'] = Base.make_password(data['password'])
         Log.info('login data is %s' % data)
         Log.info('login url is %s' % self.url)

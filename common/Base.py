@@ -8,7 +8,8 @@ from common.log import Log
 
 class Base:
     headers = {'Content-Type': 'application/json;charset=UTF-8', 'Connection': 'keep-alive',
-               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36'}
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                                  'Chrome/66.0.3359.117 Safari/537.36'}
     lc = LoadConfig()
     dh = DataHandle()
 
@@ -16,6 +17,7 @@ class Base:
         """ @:param node  1: hongkong other:bulisiban
             @:param p_id  path id
         """
+
         self.domain = self.lc.get_domain_h() if node == 1 else self.lc.get_domain_b()
         self.url = self.domain + self.dh.get_path(path_id)
         pass

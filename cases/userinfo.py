@@ -166,7 +166,7 @@ class UserInfo(Base):
         req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
         # 请求
         res = requests.post(url=url_get_user_by_id, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=json.dumps(req_para), timeout=10).json()
         Log.info('query_in_status response data is {}'.format(res))
         # 结果检查
         actual = self.check(res)

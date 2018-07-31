@@ -26,6 +26,7 @@ class TestQueryInStatusBB(unittest.TestCase):
 
     def test_query_in_status(self):
         """BB 本地查询在线状态"""
+        Log.debug('test_query_in_status start')
         para_id = 4
         data_id = 4003
         res = self.ui.base_query_in_status(para_id=para_id, data_id=data_id,
@@ -36,6 +37,7 @@ class TestQueryInStatusBB(unittest.TestCase):
 
     def test_query_in_status_no_session(self):
         """BB 未登录本地查询在线状态失败"""
+        Log.debug('test_query_in_status_no_session start')
         para_id = 4
         data_id = 4004
         res = self.ui.base_query_in_status(para_id=para_id, data_id=data_id,

@@ -75,7 +75,7 @@ class sql:
 
 
 if __name__ == '__main__':
-    s = sql()
-    sql_select_update = 'SELECT * FROM t_user WHERE loginName = \'update\''
-    s.select_dic_single(sql_select_update)
+    # s = sql()
+    # ttt = 'SELECT * FROM t_user WHERE loginName = \'update\''
+    # print(len(s.select(ttt)))
     pass
