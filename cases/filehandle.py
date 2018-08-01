@@ -35,7 +35,7 @@ class FileHandle(Base):
         if not noFile:
             f = open(self.gene_file(req_para['fileName']), 'rb')
             Log.debug('*********{}****'.format(type(f)))
-            files = {'file':  f}
+            files = {'file': f}
             Log.info('要上传的文件是 :{}'.format(f.name))
         else:
             files = {}
@@ -59,6 +59,41 @@ class FileHandle(Base):
         self.dh.write_data(data_source)
         # 结果检查
         return self.dh.check_result(data_source)
+
+    def upload_and_return_id(self, filename, para_id, fileType, cookies):
+        """ 上传文件，返回fileid"""
+        # 获取请求url
+        url_upload = self.domain + Base.dh.get_path(para_id)
+        Log.info('upload request url : {}'.format(url_upload))
+        # 获取请求数据格式
+        req_para = Base.get_req_para(para_id=para_id, data_id=10001)
+        # 拼接文件绝对路径
+        req_para['fileName'] = filename
+        Log.debug('文件绝对路径：{}'.format(self.gene_file(req_para['fileName'])))
+        Log.debug('********：{}'.format(type(self.gene_file(req_para['fileName']))))
+
+        try:
+            f = open(self.gene_file(req_para['fileName']), 'rb')
+            Log.debug('*********{}****'.format(type(f)))
+            files = {'file': f}
+            Log.info('要上传的文件是 :{}'.format(f.name))
+        except Exception as e:
+            Log.error('上传文件为空')
+            raise AssertionError('文件不存在 ! {}'.format(e))
+
+        # 接口数据设置
+        req_para['fileType'] = fileType
+        req_para['fileSize'] = 7000
+        Log.info('upload request data is {}'.format(json.dumps(req_para)))
+        # 请求接口
+        try:
+            res = requests.post(url=url_upload, cookies=cookies,
+                                data=req_para, files=files).json()
+            Log.info('upload response data is {}'.format(res))
+        except Exception as e:
+            raise AssertionError("文件上传失败！{}".format(e))
+
+        return res['data']
 
     @staticmethod
     def change_name(name):
@@ -92,6 +127,6 @@ if __name__ == '__main__':
     d_id = 10001
     cookies = Login(node=2, path_id=1).get_cookie()
     # cookies = None
-    fh.base_upload(para_id=p_id, data_id=d_id, cookies=cookies,isChange=0,noFile=0)
+    fh.base_upload(para_id=p_id, data_id=d_id, cookies=cookies, isChange=0, noFile=0)
     # print(fh.change_name(name))
     # print(fh.gene_file(name))

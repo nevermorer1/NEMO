@@ -27,7 +27,7 @@ sys.path.append('../cases')
 sys.path.append('../common')
 
 test_dir = '../cases'
-discover = unittest.defaultTestLoader.discover(test_dir, pattern='test_query_*.py')
+discover = unittest.defaultTestLoader.discover(test_dir, pattern='test_*.py')
 
 if __name__ == "__main__":
     Log.info('*'*100)
