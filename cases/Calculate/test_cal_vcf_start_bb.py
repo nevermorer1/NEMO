@@ -13,7 +13,7 @@ class TestVCFStartBB(unittest.TestCase):
         Log.info('TestVCFStartBB START BB端')
         cls.node = 2
         cls.dh = DataHandle()
-        # 香港端
+        # 布里端
         cls.L = Login(node=cls.node)
         cls.admin_cookies = cls.L.get_cookie()
         cls.cal_vcf = CalVcf(node=cls.node)

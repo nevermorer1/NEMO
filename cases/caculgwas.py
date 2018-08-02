@@ -8,7 +8,7 @@ from common.dataHandle import DataHandle
 from cases.filehandle import FileHandle
 
 
-class CalGen(Base):
+class CalGwas(Base):
 
     def __init__(self, node=1, path_id=1):
         self.node = node
@@ -16,8 +16,8 @@ class CalGen(Base):
         self.node_o = 2 if self.node == 1 else 1
         # 文件上传接口para id
         self.upload_para_id = 10
-        # gen 文件类型 2
-        self.fileType = 2
+        # gwas 文件类型 3
+        self.fileType = 3
 
         self.fh = FileHandle(node=self.node)
         # 本端数据库
@@ -25,11 +25,11 @@ class CalGen(Base):
         # 对端数据库
         self.con_o = sql(node=self.node_o)
 
-    def base_gen_start(self, para_id, data_id, cookies, isChange=0, maxFile=0):
-        """gen start gen计算发起. isChange:0读取请求数据，1 请求数据重复100遍"""
+    def base_gwas_start(self, para_id, data_id, cookies, isChange=0, maxFile=0):
+        """gwas start gwas计算发起. isChange:0读取请求数据，1 请求数据重复100遍"""
         # 获取请求url
-        url_gen_start = self.domain + Base.dh.get_path(para_id)
-        Log.info('gen_start request url : {}'.format(url_gen_start))
+        url_gwas_start = self.domain + Base.dh.get_path(para_id)
+        Log.info('gwas_start request url : {}'.format(url_gwas_start))
         # 获取请求数据
         data_source = self.dh.get_data(data_id)
         req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
@@ -53,22 +53,22 @@ class CalGen(Base):
             req_para['remark'] = req_para['remark'] * 100
             data_source[0][7] = req_para['remark']
 
-        # top 数据转换
-        req_para['top'] = eval(req_para['top'])
-        Log.info('gen_start request data is {}'.format(req_para))
+        # logicType 数据转换
+        req_para['logicType'] = eval(req_para['logicType'])
+        Log.info('gwas_start request data is {}'.format(req_para))
         # 请求
-        res = requests.post(url=url_gen_start, headers=Base.headers, cookies=cookies,
+        res = requests.post(url=url_gwas_start, headers=Base.headers, cookies=cookies,
                             data=json.dumps(req_para)).json()
-        Log.info('gen_start response data is {}'.format(res))
+        Log.info('gwas_start response data is {}'.format(res))
         # 结果检查
-        actual = self.gen_check(res)
+        actual = self.gwas_check(res)
         # 结果写入
         DataHandle.set_data(data_source[0], actual)
         self.dh.write_data(data_source)
         # 结果检查
         return self.dh.check_result(data_source)
 
-    def gen_check(self, res):
+    def gwas_check(self, res):
         code = '00000'
         # taskId = res['data']
         # Log.debug('taskId is {}'.format(taskId))
@@ -105,10 +105,10 @@ class CalGen(Base):
         list2.append(data_o['status'])
         list1.append(data_n['name'])
         list2.append(data_o['name'])
-        list1.append(data_n['top'])
-        list2.append(data_o['top'])
-        Log.info('compare data is {}'.format(list1))
-        Log.info('compare data is {}'.format(list2))
+        list1.append(data_n['logicType'])
+        list2.append(data_o['logicType'])
+        Log.info('compare data is 本端：{}'.format(list1))
+        Log.info('compare data is 对端：{}'.format(list2))
         if list1 == list2:
             return True
         return False
@@ -124,7 +124,7 @@ class CalGen(Base):
 
     def get_max_file_id(self):
         sql_max = 'SELECT max(id) from t_file'
-        return [self.con_n.select_single(sql_max) + 6666]
+        return [self.con_n.select_single(sql_max) + 6666, self.con_n.select_single(sql_max) + 6667]
 
     def gene_file_id_list(self, files, cookies):
         """"请求参数上传文件列表，返回文件id"""
@@ -140,11 +140,11 @@ class CalGen(Base):
 
 if __name__ == '__main__':
     Log.debug('*' * 50)
-    cv = CalGen(node=1)
+    cv = CalGwas(node=1)
     ck = Login(node=1)
     cookie = ck.get_cookie()
     # cookie =None
-    para_id = 13
-    data_id = 13006
-    cv.base_gen_start(para_id, data_id, cookie, isChange=1,maxFile=0)
+    para_id = 15
+    data_id = 15001
+    cv.base_gwas_start(para_id, data_id, cookie, isChange=0, maxFile=1)
     Log.debug('*' * 50)

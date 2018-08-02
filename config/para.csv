@@ -12,6 +12,9 @@ id,des,PATH,,,,,,,
 11,8.4.1.vcf数据集比较发起,/calculate/vcfStart,fileList,remark,,,,,
 12,8.4.2.vcf数据集接收,/calculate/vcfAccept,taskId,status,calType,fileName[],startTime,remark,
 13,8.4.3.基因编辑比对发起,/calculate/genStart,fileList,top,remark,,,,
+14,8.4.4.基因编辑比对接收,/calculate/genAccept,taskId,top,status,calType,startTime,fileName[],remark
+15,8.4.5.GWAS计算发起,/calculate/gwasStart,fileList,logicType,remark,,,,
+16,8.4.6.GWAS计算接收,/calculate/gwasAccept,taskId,logicType,status,calType,startTime,fileName[],remark
 111,8.3.2.协同计算-下载Excel（包括三个计算）,/file/downloadTask,calType,target,remark,taskIdList,,,
 121,8.3.3.历史记录-下载文件（vcf）,/file/downloadVcfTask,taskId,,,,,,
 131,8.3.4. 历史记录-下载文件（基因序列）,/file/downloadGenTask,taskId,,,,,,
@@ -20,9 +23,6 @@ id,des,PATH,,,,,,,
 161,8.3.7.历史记录-下载Excel（基因序列）,/file/downloaGenHistory,taskId,,,,,,
 171,8.3.8.历史记录-下载Excel（GWAS）,/file/downloadGwasHistory,taskId,,,,,,
 181,8.3.9.逻辑管理-下载电路文件,/file/downloadCircuitry,logicId,,,,,,
-22,8.4.4.基因编辑比对接收,/calculate/genAccept,taskId,top,status,calType,startTime,fileName[],remark
-23,8.4.5.GWAS计算发起,/calculate/gwasStart,logicType,fileList,remark,,,,
-24,8.4.6.GWAS计算接收,/calculate/gwasAccept,taskId,logicType,status,calType,startTime,fileName[],remark
 25,8.4.7.更改任务状态,/calculate/changeStatus,taskId,status,type,,,,
 26,8.4.8.协同计算-查询协同计算列表,/calculate/getListByAccept,calType,target,remark,pageNo,pageSize,,
 27,8.4.9.协同计算-查询详情,/calculate/getDetailByAccept,taskId,,,,,,
