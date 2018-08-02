@@ -123,26 +123,26 @@ class TestGwasStartBB(unittest.TestCase):
         Log.debug('test_gwas_start_ill_logicType end')
         pass
 
-    def test_gwas_start_mix_logicType(self):
+    def test_gwas_start_4_logicType_success(self):
         """BB gwas发起成功，logicType多个"""
-        Log.debug('test_gwas_start_mix_logicType start')
+        Log.debug('test_gwas_start_4_logicType_success start')
         para_id = 15
         data_id = 15021
         res = self.cal_gwas.base_gwas_start(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
                                             isChange=0, maxFile=0)
         self.assertTrue(res, msg='result check fail')
-        Log.debug('test_gwas_start_mix_logicType end')
+        Log.debug('test_gwas_start_4_logicType_success end')
         pass
 
-    def test_gwas_start_mix_logicType(self):
+    def test_gwas_start_5_logicType_fail(self):
         """BB gwas发起成功，logicType超过4个"""
-        Log.debug('test_gwas_start_mix_logicType start')
+        Log.debug('test_gwas_start_5_logicType_fail start')
         para_id = 15
         data_id = 15022
         res = self.cal_gwas.base_gwas_start(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
                                             isChange=0, maxFile=0)
         self.assertTrue(res, msg='result check fail')
-        Log.debug('test_gwas_start_mix_logicType end')
+        Log.debug('test_gwas_start_5_logicType_fail end')
         pass
 
     def tearDown(self):
