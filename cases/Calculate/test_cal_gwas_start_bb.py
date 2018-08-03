@@ -6,7 +6,7 @@ from cases.caculgwas import CalGwas
 
 
 class TestGwasStartBB(unittest.TestCase):
-    """GEN发起-BB端"""
+    """Gwas发起-BB端"""
 
     @classmethod
     def setUpClass(cls):

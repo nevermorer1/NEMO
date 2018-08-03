@@ -6,7 +6,7 @@ from cases.caculgwas import CalGwas
 
 
 class TestGwasStartHK(unittest.TestCase):
-    """GEN发起-HK端"""
+    """Gwas发起-HK端"""
 
     @classmethod
     def setUpClass(cls):
