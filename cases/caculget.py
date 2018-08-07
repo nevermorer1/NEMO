@@ -36,7 +36,7 @@ class CalGet(Base):
         Log.info('get_list_by_accept request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_get_list_by_accept, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('get_list_by_accept response data is {}'.format(res))
         # 结果检查
         actual = self.get_list_by_accept_check(res)
@@ -60,7 +60,7 @@ class CalGet(Base):
         Log.info('get_detail_by_accept request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_get_detail_by_accept, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('get_detail_by_accept response data is {}'.format(res))
         # 结果检查
         actual = self.get_detail_by_accept_check(req_para['taskId'], res)
@@ -81,7 +81,7 @@ class CalGet(Base):
         Log.info('get_server request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_get_server, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('get_server response data is {}'.format(res))
         # 结果检查
         actual = self.get_server_check(res)
@@ -110,6 +110,7 @@ class CalGet(Base):
         return 0
 
     def get_task_id(self):
+        """获取task id.返回随机id"""
         sql_task_id = 'select id from t_task'
         res = self.con_n.select(sql_task_id)
         return random.choice(res)[0]

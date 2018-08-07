@@ -24,7 +24,7 @@ class Logout(Base):
         Log.info('request data is %s' % req_para)
         # 请求接口
         res = requests.post(url=self.url, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('logout response data is {}'.format(res))
         # 结果检查
         actual = self.check(res)

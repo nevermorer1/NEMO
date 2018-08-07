@@ -1,15 +1,19 @@
 from common.dataHandle import DataHandle
 from common.loadConfig import LoadConfig
 import time
-# import requests
+import rsa
 import hashlib
+import base64
 from common.log import Log
+import collections
+import json
+import os
 
 
 class Base:
     headers = {'Content-Type': 'application/json;charset=UTF-8', 'Connection': 'keep-alive',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                                  'Chrome/66.0.3359.117 Safari/537.36'}
+               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                             'Chrome/66.0.3359.117 Safari/537.36'}
     lc = LoadConfig()
     dh = DataHandle()
 
@@ -48,6 +52,33 @@ class Base:
     def gene_username():
         return 'test{}'.format(int(time.strftime("%Y%m%d%H%M%S")))
 
+    @staticmethod
+    def sign(data):
+        # 加签私钥
+        keyfile = os.path.join(os.path.abspath('../config'), 'keyen.pem')
+        pri_key = rsa.PrivateKey.load_pkcs1(keyfile=open(keyfile, 'r').read().encode())
+
+        # 数据排序
+        sorted_data = collections.OrderedDict()
+        for key in sorted(data.keys()):
+            sorted_data[key] = data[key]
+
+        str_data = json.dumps(sorted_data)
+        # 去掉空格
+        str_data = str_data.split()
+        str_data = ''.join(str_data)
+        # 签名
+        signature = rsa.sign(str_data.encode(encoding='utf-8'), priv_key=pri_key, hash='SHA-1')
+        sig = base64.b16encode(signature).lower().decode()
+        res = {
+            "msg": str_data,
+            "signature": sig
+        }
+        Log.info('加签数据为：{}'.format(json.dumps(res)))
+        return json.dumps(res)
+
 
 if __name__ == "__main__":
-    print(Base.gene_username())
+    # print(Base.gene_username())
+    data = {"target": "", "calType": "", "pageNo": 1, "pageSize": 20, "remark": ""}
+    print(Base.sign(data))

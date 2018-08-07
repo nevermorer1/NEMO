@@ -54,7 +54,7 @@ class CalVcf(Base):
         Log.info('vcf_start request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_vcf_start, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('vcf_start response data is {}'.format(res))
         # 结果检查
         actual = self.vcf_check(res)

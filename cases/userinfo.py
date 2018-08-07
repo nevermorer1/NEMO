@@ -42,7 +42,7 @@ class UserInfo(Base):
         self.before_reset()
         # 请求接口
         res = requests.post(url=url_reset, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('reset_password response data is {}'.format(res))
         # 结果检查
         actual = self.after_reset_check(res)
@@ -71,7 +71,7 @@ class UserInfo(Base):
         Log.info('insert user request data is {}'.format(json.dumps(req_para)))
         # 请求接口
         res = requests.post(url=url_insert, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('insert user response data is {}'.format(res))
         # 结果检查
         actual = self.check(res)
@@ -98,7 +98,7 @@ class UserInfo(Base):
         self.before_modify_check()
         # 请求
         res = requests.post(url=url_modify, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('modify_password response data is {}'.format(res))
         # 结果检查
         actual = self.modify_check(res)
@@ -119,7 +119,7 @@ class UserInfo(Base):
         Log.info('get_list_by_condition request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_get_list_by_condition, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('get_list_by_condition response data is {}'.format(res))
         # 结果检查
         actual = self.check(res)
@@ -145,7 +145,7 @@ class UserInfo(Base):
         Log.info('get_user_by_id request data : {}'.format(req_para))
         # 请求
         res = requests.post(url=url_get_user_by_id, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('get_user_by_id response data is {}'.format(res))
         # 结果检查
         actual = self.check(res)
@@ -166,7 +166,7 @@ class UserInfo(Base):
         req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
         # 请求
         res = requests.post(url=url_get_user_by_id, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para), timeout=10).json()
+                            data=Base.sign(req_para), timeout=10).json()
         Log.info('query_in_status response data is {}'.format(res))
         # 结果检查
         actual = self.check(res)
@@ -195,7 +195,7 @@ class UserInfo(Base):
         self.before_update()
         # 请求接口
         res = requests.post(url=url_update, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('update user response data is {}'.format(res))
         # 结果检查
         actual = self.after_update_check(res=res, status=req_para['status'])

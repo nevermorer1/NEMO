@@ -58,7 +58,7 @@ class CalGen(Base):
         Log.info('gen_start request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_gen_start, headers=Base.headers, cookies=cookies,
-                            data=json.dumps(req_para)).json()
+                            data=Base.sign(req_para)).json()
         Log.info('gen_start response data is {}'.format(res))
         # 结果检查
         actual = self.gen_check(res)
