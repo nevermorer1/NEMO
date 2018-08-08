@@ -28,8 +28,8 @@ class ComputeGwas(Base):
     def base_compute_gwas(self, para_id, data_id, cookies, calType=3, maxFile=0):
         """vcf协同计算  calType:1 随机查找vcf task ; 2 查找基因协同计算任务 3 GWAS 0 查找最大id+6666"""
         # 获取请求url
-        url_compute_vcf = self.domain + Base.dh.get_path(para_id)
-        Log.info('compute_gwas request url : {}'.format(url_compute_vcf))
+        url_compute_gwas = self.domain + Base.dh.get_path(para_id)
+        Log.info('compute_gwas request url : {}'.format(url_compute_gwas))
         # 获取请求数据
         data_source = self.dh.get_data(data_id)
         req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
@@ -56,7 +56,7 @@ class ComputeGwas(Base):
         data_source[0][6] = req_para['fileIdList']
         Log.info('compute_gwas request data is {}'.format(req_para))
         # 请求
-        res = requests.post(url=url_compute_vcf, headers=Base.headers, cookies=cookies,
+        res = requests.post(url=url_compute_gwas, headers=Base.headers, cookies=cookies,
                             data=Base.sign(req_para)).json()
         Log.info('compute_gwas response data is {}'.format(res))
         # 结果检查
