@@ -25,7 +25,7 @@ class ComputeVcf(Base):
         # 对端数据库
         self.con_o = sql(node=self.node_o)
 
-    def base_compute_vcf(self, para_id, data_id, cookies, calType=1, maxFile=0):
+    def base_compute_vcf(self, para_id, data_id, cookies,flag, calType=1, maxFile=0):
         """vcf协同计算  calType:1 随机查找vcf task ; 2 查找基因协同计算任务 3 GWAS 0 查找最大id+6666"""
         # 获取请求url
         url_compute_vcf = self.domain + Base.dh.get_path(para_id)
@@ -56,15 +56,57 @@ class ComputeVcf(Base):
                             data=Base.sign(req_para)).json()
         Log.info('compute_vcf response data is {}'.format(res))
         # 结果检查
-        actual = self.vcf_check(res)
+        actual = self.vcf_check(res,flag)
         # 结果写入
         DataHandle.set_data(data_source[0], actual)
         self.dh.write_data(data_source)
         # 结果检查
         return self.dh.check_result(data_source)
 
-    def vcf_check(self, res):
+    def base_compute_mul(self, para_id, data_id, cookies,flag, maxId=0, maxFile=0):
+        """vcf  批量计算"""
+        # 获取请求url
+        url_compute_mul = self.domain + Base.dh.get_path(para_id)
+        Log.info('compute_mul request url : {}'.format(url_compute_mul))
+        # 获取请求数据
+        data_source = self.dh.get_data(data_id)
+        req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
+        # 登录态判断
+        if cookies is not None:
+            # 不存在的fileid
+            if maxFile:
+                req_para['fileId'] = self.get_max_file_id()
+            else:
+                # file文件上传获取fileId
+                req_para['fileId'] = self.gene_file_id(req_para['fileId'], cookies)
+
+        # taskId
+        if maxId:
+            req_para['taskId'] = self.get_vcf_max_task_id()
+        else:
+            req_para['taskId'] = self.get_vcf_task_id_list()
+
+        data_source[0][5] = req_para['taskId']
+        data_source[0][7] = req_para['fileId']
+        Log.info('compute_vcf request data is {}'.format(req_para))
+        # 请求
+        res = requests.post(url=url_compute_mul, headers=Base.headers, cookies=cookies,
+                            data=Base.sign(req_para)).json()
+        Log.info('compute_vcf response data is {}'.format(res))
+        # 结果检查
+        actual = self.vcf_check(res,flag)
+        # 结果写入
+        DataHandle.set_data(data_source[0], actual)
+        self.dh.write_data(data_source)
+        # 结果检查
+        return self.dh.check_result(data_source)
+
+    def vcf_check(self, res,flag):
         code = '00000'
+        if flag and res['code'] != code:
+            raise AssertionError('请求返回应该为成功，实际失败 {}'.format(res))
+        if not flag and res['code'] == code:
+            raise AssertionError('异常用例请求返回应该为失败，实际成功 {}'.format(res))
         if res['code'] == code:
             Log.info('result check success ')
             return 1
@@ -115,7 +157,22 @@ class ComputeVcf(Base):
     def get_max_task_id(self):
         """生成不存在的taskId"""
         sql_max = 'SELECT max(id) from t_task'
-        return self.con_n.select_single(sql_max) + 6666
+        max_id = self.con_n.select_single(sql_max)
+        return [max_id + 6666, max_id + 6667]
+
+    def get_vcf_max_task_id(self):
+        """生成不存在vcf的taskId"""
+        sql_max = 'SELECT max(id) from t_task where calType =1 and status =1'
+        max_id = self.con_n.select_single(sql_max)
+        return [max_id + 6666, max_id + 6667]
+
+    def get_vcf_task_id_list(self):
+        """生成vcf task id 列表"""
+        sql_task_id = 'SELECT id from t_task where calType =1 and status =1'
+        task_id = self.con_n.select(sql_task_id)
+        if len(task_id)<2:
+            raise AssertionError('vcf 协同计算任务数量少于2，{}'.format(task_id))
+        return [task_id[-1][0], task_id[-2][0]]
 
     def get_max_file_id(self):
         """生成不存在的fileId"""

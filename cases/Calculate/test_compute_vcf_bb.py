@@ -32,7 +32,7 @@ class TestComputeVcfBB(unittest.TestCase):
         para_id = 22
         data_id = 22007
         res = self.comp_vcf.base_compute_vcf(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
-                                             calType=self.calType, maxFile=0)
+                                             flag=True, calType=self.calType, maxFile=0)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_compute_vcf_success end')
         pass
@@ -43,7 +43,7 @@ class TestComputeVcfBB(unittest.TestCase):
         para_id = 22
         data_id = 22008
         res = self.comp_vcf.base_compute_vcf(para_id=para_id, data_id=data_id, cookies=None,
-                                             calType=self.calType, maxFile=0)
+                                             flag=False, calType=self.calType, maxFile=0)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_compute_vcf_no_session_fail end')
         pass
@@ -54,7 +54,7 @@ class TestComputeVcfBB(unittest.TestCase):
         para_id = 22
         data_id = 22009
         res = self.comp_vcf.base_compute_vcf(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
-                                             calType=0, maxFile=0)
+                                             flag=False, calType=0, maxFile=0)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_compute_vcf_taskId_not_exist_fail end')
         pass
@@ -65,7 +65,7 @@ class TestComputeVcfBB(unittest.TestCase):
         para_id = 22
         data_id = 22010
         res = self.comp_vcf.base_compute_vcf(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
-                                             calType=self.calType, maxFile=1)
+                                             flag=False, calType=self.calType, maxFile=1)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_compute_vcf_fileId_not_exist_fail end')
         pass
@@ -76,7 +76,7 @@ class TestComputeVcfBB(unittest.TestCase):
         para_id = 22
         data_id = 22011
         res = self.comp_vcf.base_compute_vcf(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
-                                             calType=2, maxFile=0)
+                                             flag=False, calType=2, maxFile=0)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_compute_vcf_taskId_wrong_2_fail end')
         pass
@@ -87,7 +87,7 @@ class TestComputeVcfBB(unittest.TestCase):
         para_id = 22
         data_id = 22012
         res = self.comp_vcf.base_compute_vcf(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
-                                             calType=3, maxFile=0)
+                                             flag=False, calType=3, maxFile=0)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_compute_vcf_taskId_wrong_3_fail end')
         pass
