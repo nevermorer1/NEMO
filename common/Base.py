@@ -53,15 +53,24 @@ class Base:
         return 'test{}'.format(int(time.strftime("%Y%m%d%H%M%S")))
 
     @staticmethod
+    def order_dic_by_keys(data):
+        """字典按key排序"""
+        sorted_data = collections.OrderedDict()
+        for key in sorted(data.keys()):
+            sorted_data[key] = data[key]
+        return sorted_data
+
+    @staticmethod
     def sign(data):
         # 加签私钥
         keyfile = os.path.join(os.path.abspath('../config'), 'keyen.pem')
         pri_key = rsa.PrivateKey.load_pkcs1(keyfile=open(keyfile, 'r').read().encode())
 
         # 数据排序
-        sorted_data = collections.OrderedDict()
-        for key in sorted(data.keys()):
-            sorted_data[key] = data[key]
+        sorted_data = Base.order_dic_by_keys(data)
+        # sorted_data = collections.OrderedDict()
+        # for key in sorted(data.keys()):
+        #     sorted_data[key] = data[key]
 
         str_data = json.dumps(sorted_data)
         # 去掉空格

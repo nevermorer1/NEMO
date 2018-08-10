@@ -5,7 +5,6 @@ import requests
 from common.sql import sql
 from common.dataHandle import DataHandle
 import time
-import random
 
 
 class CancelTask(Base):
@@ -84,9 +83,11 @@ class CancelTask(Base):
     def query_check(self, res, flag):
         code = '00000'
         if flag and res['code'] != code:
-            raise AssertionError('请求返回应该为成功，实际失败 {}'.format(res))
+            Log.error('请求返回应该为成功，实际失败 {}'.format(res))
+            return 0
         if not flag and res['code'] == code:
-            raise AssertionError('异常用例请求返回应该为失败，实际成功 {}'.format(res))
+            Log.error('异常用例请求返回应该为失败，实际成功 {}'.format(res))
+            return 1
         if not res['code'] == code:
             Log.error('请求返回有误！{}'.format(res))
             return 0
