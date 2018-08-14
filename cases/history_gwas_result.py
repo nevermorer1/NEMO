@@ -7,10 +7,11 @@ from historytest import HistoryTest
 
 
 class HistoryGWAS(HistoryTest):
-    gwas_sql = ['select * from t_task_history where calType=3 and status=3 and logicType like \'%1%\'',
-                'select * from t_task_history where calType=3 and status=3 and logicType like \'%2%\'',
-                'select * from t_task_history where calType=3 and status=3 and logicType like \'%3%\'',
-                'select * from t_task_history where calType=3 and status=3 and logicType like \'%4%\'']
+    gwas_sql = ['select id from t_task_history where calType=3 and status=3 and logicType like \'%1%\'',
+                'select id from t_task_history where calType=3 and status=3 and logicType like \'%2%\'',
+                'select id from t_task_history where calType=3 and status=3 and logicType like \'%3%\'',
+                'select id from t_task_history where calType=3 and status=3 and logicType like \'%4%\'',
+                'select id from t_task_history where errType is NOT NULL']
 
     def __init__(self, node=1, path_id=1):
         self.node = node
@@ -255,7 +256,7 @@ class HistoryGWAS(HistoryTest):
         return 0
 
     def base_get_error_result(self, para_id, data_id, cookies, flag):
-        """历史记录-查询GWAS-隐性计算结果公共方法"""
+        """历史记录-查询错误结果公共方法"""
         # 获取请求url
         url_get_error_result = self.domain + Base.dh.get_path(para_id)
         Log.info('get_error_result request url : {}'.format(url_get_error_result))
@@ -263,9 +264,7 @@ class HistoryGWAS(HistoryTest):
         data_source = self.dh.get_data(data_id)
         req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
         # 查询数据库taskId，随机选择查询
-        req_para['taskId'] = self.get_Recessive_done_task_id()
-        req_para['pageNo'] = eval(req_para['pageNo'])
-        req_para['pageSize'] = eval(req_para['pageSize'])
+        req_para['taskId'] = self.get_error_task_id()
         data_source[0][5] = req_para['taskId']
         # 数据库查询taskId为空处理
         if req_para['taskId'] is None:
@@ -286,12 +285,12 @@ class HistoryGWAS(HistoryTest):
         return self.dh.check_result(data_source)
 
     def get_error_task_id(self):
-        """获取计算完成的 gen task id.返回随机id"""
-        sql_task_id = self.gwas_sql[3]
+        """获取error task id.返回随机id"""
+        sql_task_id = self.gwas_sql[4]
         res = self.con_n.select(sql_task_id)
         return random.choice(res)[0]
 
-    def get_error_check(self, taskId, res, flag):
+    def get_error_result_check(self, taskId, res, flag):
         """1 成功 0 失败"""
         code = '00000'
         if flag and res['code'] != code:
@@ -303,12 +302,13 @@ class HistoryGWAS(HistoryTest):
         if res["code"] != code:
             Log.error('返回错误：{}'.format(res))
             return 0
-        sql_res = 'select count(*) from t_task_result where taskId = %d and logicType=4' % taskId
-        data_database = self.con_n.select_single(sql_res)
-        Log.debug('=={}=='.format(data_database))
-        data_res = res['totalCount']
-        Log.debug('**{}**'.format(data_res))
-        if data_database == data_res:
+        sql_res = 'select * from t_task_history where id = %d' % taskId
+        Log.debug('====查询sql：{}'.format(sql_res))
+        data_database = self.con_n.select_dic_single(sql_res)
+        Log.debug('=数据库查询结果={}={}='.format(data_database['errType'], data_database['errRole']))
+        data_res = res['data']
+        Log.debug('*接口返回*{}*{}*'.format(data_res['errType'], data_res['errRole']))
+        if data_database['errType'] == data_res['errType'] and data_database['errRole'] == data_res['errRole']:
             Log.info('data equal, compare success')
             return 1
         Log.error('data different, compare fail')
