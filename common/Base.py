@@ -86,6 +86,12 @@ class Base:
         Log.info('加签数据为：{}'.format(json.dumps(res)))
         return json.dumps(res)
 
+    @staticmethod
+    def str2sec(str_t):
+        str_t = str_t
+        h, m, s = str_t.strip().split(':')
+        return int(h) * 3600 + int(m) * 60 + int(s)
+
 
 if __name__ == "__main__":
     # print(Base.gene_username())

@@ -131,7 +131,7 @@ class CancelTask(Base):
             Log.debug('对端查询sql：{}'.format(sql_o))
             data_n = self.con_n.select_dic_single(sql=sql_n)
             Log.info('本端数据为： {}'.format(data_n))
-            time.sleep(5)
+            time.sleep(10)
             try:
                 data_o = self.con_o.select_dic_single(sql=sql_o)
             except IndexError as e:
