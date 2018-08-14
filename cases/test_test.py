@@ -21,8 +21,8 @@ class MMM(unittest.TestCase):
         """test framework"""
         url = self.lc.get_domain_h() + self.dh.get_path(43)
         Log.info('request url is %s' % url)
-        para_source = self.dh.get_para(1)
-        data_source = self.dh.get_data(1001)
+        para_source = self.dh.get_para(2)
+        data_source = self.dh.get_data(2001)
         for i in range(len(data_source)):
             req_para = DataHandle.combine_data(para_source, data_source[i])
             Log.info(req_para)
