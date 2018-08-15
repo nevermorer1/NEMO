@@ -51,6 +51,7 @@ class CalVcf(Base):
         if isChange:
             req_para['remark'] = req_para['remark'] * 100
             data_source[0][6] = req_para['remark']
+        req_para['isPrint'] = eval(req_para['isPrint'])
         Log.info('vcf_start request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_vcf_start, headers=Base.headers, cookies=cookies,

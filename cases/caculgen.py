@@ -55,6 +55,7 @@ class CalGen(Base):
 
         # top 数据转换
         req_para['top'] = eval(req_para['top'])
+        req_para['isPrint'] = eval(req_para['isPrint'])
         Log.info('gen_start request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_gen_start, headers=Base.headers, cookies=cookies,

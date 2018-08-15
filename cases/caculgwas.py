@@ -55,6 +55,7 @@ class CalGwas(Base):
 
         # logicType 数据转换
         req_para['logicType'] = eval(req_para['logicType'])
+        req_para['isPrint'] = eval(req_para['isPrint'])
         Log.info('gwas_start request data is {}'.format(req_para))
         # 请求
         res = requests.post(url=url_gwas_start, headers=Base.headers, cookies=cookies,
