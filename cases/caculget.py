@@ -148,8 +148,8 @@ class CalGet(Base):
         list2.append(data_res['status'])
         list1.append(data_database['top'])
         list2.append(data_res['top'])
-        list1.append(data_database['logicType'])
-        list2.append(data_res['logicType'])
+        # list1.append(data_database['logicType'])
+        # list2.append(data_res['logicType'])
         Log.info('compare data is database :{}'.format(list1))
         Log.info('compare data is interface :{}'.format(list2))
         if list1 == list2:

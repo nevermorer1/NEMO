@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     runner = HTMLTestRunner(stream=fp,
                             verbosity=2,
-                            title='Test Report',
+                            title='NEMO Test Report',
                             description='Implementation Example with: ')
     runner.run(discover)
     fp.close()

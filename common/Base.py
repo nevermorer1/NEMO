@@ -8,6 +8,10 @@ from common.log import Log
 import collections
 import json
 import os
+from Crypto import Random
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA
 
 
 class Base:
@@ -61,7 +65,17 @@ class Base:
         return sorted_data
 
     @staticmethod
-    def sign(data):
+    def sign_modify(data):
+        """
+        只能处理PKCS#1 RSA Private Key file
+        格式：
+        -----BEGIN RSA PRIVATE KEY-----
+
+        -----END RSA PRIVATE KEY-----
+        -----BEGIN RSA PUBLIC KEY-----
+        -----END RSA PUBLIC KEY-----
+
+        """
         # 加签私钥
         keyfile = os.path.join(os.path.abspath('../config'), 'keyen.pem')
         pri_key = rsa.PrivateKey.load_pkcs1(keyfile=open(keyfile, 'r').read().encode())
@@ -87,6 +101,40 @@ class Base:
         return json.dumps(res)
 
     @staticmethod
+    def sign(data):
+        """
+        同时处理PKCS#1 PKCS#8
+        -----BEGIN PRIVATE KEY-----
+        -----END PRIVATE KEY-----
+
+        限制：公私钥文件必须分离，且-----END PRIVATE KEY-----之后不能又空格及空行
+        """
+
+        # 数据排序
+        sorted_data = Base.order_dic_by_keys(data)
+        str_data = json.dumps(sorted_data)
+        # 去掉空格
+        str_data = str_data.split()
+        str_data = ''.join(str_data)
+
+        file = os.path.join(os.path.abspath('../config'), 'private.txt')
+        keyfile = open(file, 'r').read()
+        private_key = RSA.importKey(keyfile)
+        cipher = PKCS1_v1_5.new(private_key)
+
+        h = SHA.new(str_data.encode())
+        signature = cipher.sign(h)
+        sig = base64.b16encode(signature).lower().decode()
+
+        res = {
+            "msg": str_data,
+            "signature": sig
+        }
+        res = json.dumps(res)
+        Log.info('加签数据为：{}'.format(res))
+        return res
+
+    @staticmethod
     def str2sec(str_t):
         str_t = str_t
         h, m, s = str_t.strip().split(':')
@@ -97,3 +145,4 @@ if __name__ == "__main__":
     # print(Base.gene_username())
     data = {"target": "", "calType": "", "pageNo": 1, "pageSize": 20, "remark": ""}
     print(Base.sign(data))
+    print(Base.sign_modify(data))
