@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from common.dataHandle import DataHandle
 from common.loadConfig import LoadConfig
 import time

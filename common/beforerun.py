@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from common.sql import sql
 from common.log import Log
 

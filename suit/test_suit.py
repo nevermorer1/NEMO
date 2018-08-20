@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 # import unittest
 # import sys
 # import time
@@ -14,23 +15,27 @@
 #     runner = unittest.TextTestRunner(stream=fp, verbosity=2)
 #     runner.run(suite)
 #     fp.close()
+# -*- coding:utf-8 -*-
 from HTMLTestRunner import HTMLTestRunner
 import unittest
 import sys
-import time
-from dataHandle import DataHandle
-from log import Log
-from common.beforerun import BeforeCheck
+import os
 
+os.chdir('../common')
 
 sys.path.append('../cases')
 sys.path.append('../common')
+
+import time
+from common.dataHandle import DataHandle
+from log import Log
+from common.beforerun import BeforeCheck
 
 test_dir = '../cases'
 discover = unittest.defaultTestLoader.discover(test_dir, pattern='test_*.py')
 
 if __name__ == "__main__":
-    Log.info('*'*100)
+    Log.info('*' * 100)
     Log.info('run START')
 
     # 运行前账户状态(update,Automation)检查
@@ -54,4 +59,4 @@ if __name__ == "__main__":
     runner.run(discover)
     fp.close()
     Log.info('run FINISH')
-    Log.info('*'*100)
+    Log.info('*' * 100)

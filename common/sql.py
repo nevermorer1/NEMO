@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import pymysql
 from common.loadConfig import LoadConfig
 from common.log import Log
