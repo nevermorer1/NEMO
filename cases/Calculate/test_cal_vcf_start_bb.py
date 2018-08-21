@@ -90,6 +90,28 @@ class TestVCFStartBB(unittest.TestCase):
         Log.debug('test_vcf_start_file_not_exist end')
         pass
 
+    def test_vcf_status_1(self):
+        """BB vcf状态测试，正确文件，发起后，双端状态为待接收"""
+        Log.debug('test_vcf_status_1 start')
+        para_id = 11
+        data_id = 11015
+        res = self.cal_vcf.base_vcf_status(para_id=para_id, data_id=data_id,
+                                           cookies=self.admin_cookies,)
+        self.assertTrue(res, msg='result check fail')
+        Log.debug('test_vcf_status_1 end')
+        pass
+
+    def test_vcf_status_6(self):
+        """BBvcf状态测试，错误文件，发起后，双端状态为错误"""
+        Log.debug('test_vcf_status_6 start')
+        para_id = 11
+        data_id = 11016
+        res = self.cal_vcf.base_vcf_status(para_id=para_id, data_id=data_id,
+                                           cookies=self.admin_cookies,)
+        self.assertTrue(res, msg='result check fail')
+        Log.debug('test_vcf_status_6 end')
+        pass
+
     def tearDown(self):
         Log.debug('---------')
         pass

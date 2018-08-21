@@ -6,6 +6,7 @@ import json
 from common.sql import sql
 from common.dataHandle import DataHandle
 from cases.filehandle import FileHandle
+import time
 
 
 class CalGen(Base):
@@ -69,6 +70,63 @@ class CalGen(Base):
         # 结果检查
         return self.dh.check_result(data_source)
 
+    def base_gen_status(self, para_id, data_id, cookies):
+        """gen start gen计算发起.状态一致测试"""
+        # 获取请求url
+        url_gen_start = self.domain + Base.dh.get_path(para_id)
+        Log.info('gen_start request url : {}'.format(url_gen_start))
+        # 获取请求数据
+        data_source = self.dh.get_data(data_id)
+        req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
+
+        # fileList 字符串转列表
+        req_para['fileList'] = eval(req_para['fileList'])
+
+        req_para['fileList'] = self.gene_file_id_list(req_para['fileList'], cookies)
+        data_source[0][5] = req_para['fileList']
+
+        # top 数据转换
+        req_para['top'] = eval(req_para['top'])
+        req_para['isPrint'] = eval(req_para['isPrint'])
+        Log.info('gen_start request data is {}'.format(req_para))
+        # 请求
+        res = requests.post(url=url_gen_start, headers=Base.headers, cookies=cookies,
+                            data=Base.sign(req_para)).json()
+        Log.info('gen_start response data is {}'.format(res))
+        # 结果检查
+        status = eval(data_source[0][3])
+        actual = self.gen_status_check(res, status)
+        # 结果写入
+        DataHandle.set_data(data_source[0], actual)
+        self.dh.write_data(data_source)
+        # 结果检查
+        return self.dh.check_result(data_source)
+
+    def gen_status_check(self, res, status):
+        code = '00000'
+
+        if res['code'] == code:
+            taskId = res['data']
+            Log.debug('taskId is {}'.format(taskId))
+            # 等待双端状态同步
+            time.sleep(5)
+            # 待接收对端task存于task表，其它状态在task_history
+            if status == 1:
+                [data_n, data_o] = self.get_data(taskId)
+            else:
+                [data_n, data_o] = self.get_data_history(taskId)
+            Log.info('本端状态为： {}'.format(data_n['status']))
+            Log.info('对端状态为： {}'.format(data_o['status']))
+            Log.info('期望状态为：{}'.format(status))
+            if data_n['status'] == data_o['status'] and data_n['status'] == status:
+                Log.info('双端状态与期望状态一致，用例执行成功 !')
+                return status
+            else:
+                Log.error('双端状态与期望状态不一致，用例执行失败 !')
+                return 0
+        Log.error('请求返回有误！{}'.format(res))
+        return 0
+
     def gen_check(self, res):
         code = '00000'
         # taskId = res['data']
@@ -114,6 +172,15 @@ class CalGen(Base):
             return True
         return False
 
+    def get_data_history(self, taskId):
+        '根据发起taskid查询两端数据库数据'
+        # 本端查询sql
+        sql_n = 'select * from t_task_history where id = %d' % taskId
+        # 对端查询sql
+        sql_o = 'select * from t_task_history where startTaskId = %d' % taskId
+        return [self.con_n.select_dic_single(sql=sql_n),
+                self.con_o.select_dic_single(sql=sql_o)]
+
     def get_data(self, taskId):
         '根据发起taskid查询两端数据库数据'
         # 本端查询sql
@@ -147,5 +214,5 @@ if __name__ == '__main__':
     # cookie =None
     para_id = 13
     data_id = 13006
-    cv.base_gen_start(para_id, data_id, cookie, isChange=1,maxFile=0)
+    cv.base_gen_start(para_id, data_id, cookie, isChange=1, maxFile=0)
     Log.debug('*' * 50)

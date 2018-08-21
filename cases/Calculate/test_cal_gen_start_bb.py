@@ -73,8 +73,8 @@ class TestGenStartBB(unittest.TestCase):
         Log.debug('test_gen_start_file_not_exist start')
         para_id = 13
         data_id = 13014
-        res = res = self.cal_gen.base_gen_start(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
-                                                isChange=0, maxFile=1)
+        res = self.cal_gen.base_gen_start(para_id=para_id, data_id=data_id, cookies=self.admin_cookies,
+                                          isChange=0, maxFile=1)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_gen_start_file_not_exist end')
         pass
@@ -121,6 +121,28 @@ class TestGenStartBB(unittest.TestCase):
                                           isChange=0, maxFile=0)
         self.assertTrue(res, msg='result check fail')
         Log.debug('test_gen_start_top_3000 end')
+        pass
+
+    def test_gen_status_1(self):
+        """BB基因编辑距离对比发起状态测试，正确文件，发起后，双端状态为待接收"""
+        Log.debug('test_gen_status_1 start')
+        para_id = 13
+        data_id = 13021
+        res = self.cal_gen.base_gen_status(para_id=para_id, data_id=data_id,
+                                           cookies=self.admin_cookies, )
+        self.assertTrue(res, msg='result check fail')
+        Log.debug('test_gen_status_1 end')
+        pass
+
+    def test_gen_status_6(self):
+        """BB基因编辑距离对比发起状态测试，错误文件，发起后，双端状态为错误"""
+        Log.debug('test_gen_status_6 start')
+        para_id = 13
+        data_id = 13022
+        res = self.cal_gen.base_gen_status(para_id=para_id, data_id=data_id,
+                                           cookies=self.admin_cookies, )
+        self.assertTrue(res, msg='result check fail')
+        Log.debug('test_gen_status_6 end')
         pass
 
     def tearDown(self):
