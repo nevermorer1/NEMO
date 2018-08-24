@@ -145,6 +145,31 @@ class TestGwasStartHK(unittest.TestCase):
         Log.debug('test_gwas_start_5_logicType_fail end')
         pass
 
+    def test_gwas_status_1(self):
+        """HK基因编辑距离对比发起状态测试，正确文件，发起后，双端状态为待接收"""
+        Log.debug('test_gwas_status_1 start')
+        para_id = 15
+        data_id = 15023
+        res = self.cal_gwas.base_gwas_status(para_id=para_id, data_id=data_id,
+                                             cookies=self.admin_cookies)
+
+        self.assertTrue(res, msg='result check fail')
+        Log.debug('test_gwas_status_1 end')
+        pass
+
+    # @unittest.skip('未检测，跳过执行')
+    def test_gwas_status_6(self):
+        """HK基因编辑距离对比发起状态测试，错误文件，发起后，双端状态为错误"""
+        Log.debug('test_gwas_status_6 start')
+        para_id = 15
+        data_id = 15024
+        res = self.cal_gwas.base_gwas_status(para_id=para_id, data_id=data_id,
+                                             cookies=self.admin_cookies)
+
+        self.assertTrue(res, msg='result check fail')
+        Log.debug('test_gwas_status_6 end')
+        pass
+
     def tearDown(self):
         Log.debug('---------')
         pass

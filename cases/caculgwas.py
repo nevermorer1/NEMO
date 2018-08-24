@@ -6,6 +6,7 @@ import json
 from common.sql import sql
 from common.dataHandle import DataHandle
 from cases.filehandle import FileHandle
+import time
 
 
 class CalGwas(Base):
@@ -69,6 +70,60 @@ class CalGwas(Base):
         # 结果检查
         return self.dh.check_result(data_source)
 
+    def base_gwas_status(self, para_id, data_id, cookies):
+        """gwas start gwas计算发起. 状态测试"""
+        # 获取请求url
+        url_gwas_start = self.domain + Base.dh.get_path(para_id)
+        Log.info('gwas_start request url : {}'.format(url_gwas_start))
+        # 获取请求数据
+        data_source = self.dh.get_data(data_id)
+        req_para = Base.get_req_para(para_id=para_id, data_id=data_id)
+
+        req_para['fileList'] = eval(req_para['fileList'])
+        # fileList 文件上传，获取文件id
+        req_para['fileList'] = self.gene_file_id_list(req_para['fileList'], cookies)
+        data_source[0][5] = req_para['fileList']
+
+        # logicType 数据转换
+        req_para['logicType'] = eval(req_para['logicType'])
+        req_para['isPrint'] = eval(req_para['isPrint'])
+        Log.info('gwas_start request data is {}'.format(req_para))
+        # 请求
+        res = requests.post(url=url_gwas_start, headers=Base.headers, cookies=cookies,
+                            data=Base.sign(req_para)).json()
+        Log.info('gwas_start response data is {}'.format(res))
+        # 结果检查
+        status = eval(data_source[0][3])
+        actual = self.gwas_check_status(res, status)
+        # 结果写入
+        DataHandle.set_data(data_source[0], actual)
+        self.dh.write_data(data_source)
+        # 结果检查
+        return self.dh.check_result(data_source)
+
+    def gwas_check_status(self, res, status):
+        code = '00000'
+
+        if res['code'] == code:
+            taskId = res['data']
+            Log.debug('taskId is {}'.format(taskId))
+            time.sleep(5)
+            if status == 1:
+                [data_n, data_o] = self.get_data(taskId)
+            else:
+                [data_n, data_o] = self.get_data_history(taskId)
+            Log.info('本端状态为： {}'.format(data_n['status']))
+            Log.info('对端状态为： {}'.format(data_o['status']))
+            Log.info('期望状态为：{}'.format(status))
+            if data_n['status'] == data_o['status'] and data_n['status'] == status:
+                Log.info('双端状态与期望状态一致，用例执行成功 !')
+                return status
+            else:
+                Log.error('双端状态与期望状态不一致，用例执行失败 !')
+                return 0
+        Log.error('请求返回有误！{}'.format(res))
+        return 0
+
     def gwas_check(self, res):
         code = '00000'
         # taskId = res['data']
@@ -120,6 +175,15 @@ class CalGwas(Base):
         sql_n = 'select * from t_task_history where id = %d' % taskId
         # 对端查询sql
         sql_o = 'select * from t_task where startTaskId = %d' % taskId
+        return [self.con_n.select_dic_single(sql=sql_n),
+                self.con_o.select_dic_single(sql=sql_o)]
+
+    def get_data_history(self, taskId):
+        '根据发起taskid查询两端数据库数据'
+        # 本端查询sql
+        sql_n = 'select * from t_task_history where id = %d' % taskId
+        # 对端查询sql
+        sql_o = 'select * from t_task_history where startTaskId = %d' % taskId
         return [self.con_n.select_dic_single(sql=sql_n),
                 self.con_o.select_dic_single(sql=sql_o)]
 
